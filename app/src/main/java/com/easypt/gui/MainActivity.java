@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
     private static final int MODE_OTG = 0, MODE_LOCAL = 1, MODE_REMOTE = 2;
     private static final int REQ_IMAGE = 1001, REQ_ROM = 1002, REQ_ROM_DIR = 1003;
     private static final String ACTION_USB_PERM = "com.easypt.gui.USB_PERMISSION";
-    private static final String VER = "1.0";
+    private static final String VER = "1.1";
 
     /** 横屏（桌面版布局）开关，存在 prefs 里 */
     private boolean landscapeUi;
@@ -189,6 +189,14 @@ public class MainActivity extends Activity {
     }
 
     /** 1.9.0 原来的竖屏布局 */
+    /** 竖屏必须显示状态栏（横屏才隐藏，切回来时要恢复） */
+    private void showStatusBar() {
+        if (Build.VERSION.SDK_INT >= 30) {
+            WindowInsetsController wic = getWindow().getInsetsController();
+            if (wic != null) { wic.show(WindowInsets.Type.statusBars()); }
+        }
+    }
+
     private void buildPortraitUi() {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -293,6 +301,7 @@ public class MainActivity extends Activity {
         root.addView(inputRow);
 
         setContentView(root);
+        showStatusBar();
     }
     /**
      * 横屏：照电脑版（Easy-platform-tools-GUI 桌面端）排版
